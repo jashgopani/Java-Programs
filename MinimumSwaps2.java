@@ -7,8 +7,18 @@ import java.util.concurrent.*;
 import java.util.regex.*;
 import javafx.util.*;
 
-public class Solution {
-
+    /*
+      Working of the function
+      [4=0, 3=1, 1=2, 2=3]
+      [1=2, 2=3, 3=1, 4=0]
+      1=2
+      Starting Cycle detection
+      1=2 -> 3=1 -> 2=3 -> 4=0 ->
+      Cycles = 4
+      2=3
+      3=1
+      4=0
+    */
     // Complete the minimumSwaps function below.
     static int minimumSwaps(int[] arr) {
       //array length
@@ -19,7 +29,7 @@ public class Solution {
       for(int i=0;i<n;i++)
         arrpos.add(new Pair<Integer,Integer>(arr[i],i));
       
-      // System.out.println(arrpos);
+      System.out.println(arrpos);
 
       arrpos.sort(new Comparator<Pair<Integer,Integer>>(){
         
@@ -30,7 +40,7 @@ public class Solution {
         }
       });
 
-      // System.out.println(arrpos);
+      System.out.println(arrpos);
       boolean visited[] = new boolean[n];
       int result=0;
 
@@ -39,9 +49,10 @@ public class Solution {
           if the current element is at right position or 
           if it is already visited then ignore
         */
+        System.out.println(arrpos.get(i));
         if(visited[i] || arrpos.get(i).getValue()==i)continue;
 
-
+        System.out.println("Starting Cycle detection ");
         /* else
           start counting cycles from the current element
         */
@@ -55,6 +66,7 @@ public class Solution {
           4.repeat this until you cover the entire cycle
         */
         while(!visited[j]){
+          System.out.print(arrpos.get(j)+" -> ");
           visited[j]=true;
           j=arrpos.get(j).getValue();
           cycle++;
@@ -62,36 +74,11 @@ public class Solution {
         //number of swaps = cycles-1;
         if(cycle > 0)
           result+=(cycle-1);
+        
+        System.out.println("\n Cycles = "+cycle);
       }
       
       return result;
     }
 
-    private static final Scanner scanner = new Scanner(System.in);
-
-    public static void main(String[] args) throws IOException {
-        BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(System.getenv("OUTPUT_PATH")));
-
-        int n = scanner.nextInt();
-        scanner.skip("(\r\n|[\n\r\u2028\u2029\u0085])?");
-
-        int[] arr = new int[n];
-
-        String[] arrItems = scanner.nextLine().split(" ");
-        scanner.skip("(\r\n|[\n\r\u2028\u2029\u0085])?");
-
-        for (int i = 0; i < n; i++) {
-            int arrItem = Integer.parseInt(arrItems[i]);
-            arr[i] = arrItem;
-        }
-
-        int res = minimumSwaps(arr);
-
-        bufferedWriter.write(String.valueOf(res));
-        bufferedWriter.newLine();
-
-        bufferedWriter.close();
-
-        scanner.close();
-    }
-}
+    
